@@ -1,8 +1,9 @@
 * {
     font-family: sans-serif;
+    margin: 0;
 }
 
-.main {
+main {
     display: flex;
     align-content: center;
     justify-content: center;

@@ -1,42 +1,50 @@
 <script lang="ts">
-    import '$lib/styles/main.css';
-    import Button from '$lib/components/Button.svelte';
-    import { Color } from '$lib/types/interfaces';
-	import { sendColors } from '$lib/services/api';
-    import { goto } from '$app/navigation';
+	import { goto } from "$app/navigation";
+    import Button from "$lib/components/Button.svelte";
+    import FieldInput from "$lib/components/FieldInput.svelte";
+	import Form from "$lib/components/Form.svelte";
+    import NavigationMenu from "$lib/components/NavigationMenu.svelte";
+    import { projectContext } from '$lib/store/store';
 
-    let colorsList: Color[] = [];
-    let colorValue: string = '#000000';
+    let projectName: string = '';
 
-    const addColor = () => {
-        let color = new Color(`color-${colorsList.length + 1}`, colorValue);
-        colorsList.push(color);
-        colorsList = colorsList;
-    }
-
-    const confirmColors = async () => {
-        await sendColors(colorsList);
-        goto('./color-result')
+    const nextStep = () => {
+        $projectContext.projectName = projectName;
+        goto('./color-page')
     }
 </script>
 
-<div class="main">
-    <div class="header">
-        <h1>Welcome to C.S.S. Theme Generator</h1>
-        <p>Please select the required colors to create your theme:</p>
-        <Button on:click={addColor}>Add a color</Button>
-    </div>
-    {#each colorsList as {label, value}, index}
-        <p>Select {label}:</p>
-        <input type="color" bind:value>
-        {colorValue}
-    {/each}
-    
-    {#if colorsList.length > 0}
-        <div class="confirmBtn">
-            <Button on:click={confirmColors}>Confirm your theme's colors</Button>
+<Form>
+    <div class="main-form">
+        <p class="introduction">Svelte Scaffoling App aims to help developpers to quickly get a Svelte starter project with all the requested specifications
+        as css theme, components,... Please, follow the below steps to get all the required inputs to create your projects.
+        </p>
+        <div class="name-form">
+            Enter your project's name:
+            <div class="input-form">
+                <FieldInput bind:value={projectName} />
+            </div>
         </div>
-    {/if}
-</div>
+    </div>
+</Form>
+<NavigationMenu>
+    <Button on:click={nextStep}>Next</Button>
+</NavigationMenu>   
+
+<style lang="scss">
+    .introduction {
+        margin-bottom: 2rem;
+    }
+    .name-form {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        .input-form {
+            margin: 0 1rem;
+        }
+    }
+    
+</style>
 
 
